@@ -1,0 +1,137 @@
+.explore {
+  padding: 40px 0 80px;
+}
+
+.explore__header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.explore__title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 12px;
+  justify-content: center;
+}
+
+.explore__subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+}
+
+/* Search & Sort */
+.explore__controls {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.explore__search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: var(--radius-xl);
+}
+
+.explore__search-icon {
+  font-size: 1.1rem;
+}
+
+.explore__search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  font-size: 0.95rem;
+}
+
+.explore__search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.explore__sort {
+  padding: 12px 20px;
+  border-radius: var(--radius-xl);
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  min-width: 180px;
+}
+
+.explore__sort option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Categories */
+.explore__categories {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.explore__category {
+  padding: 10px 24px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-glass);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font-family: var(--font-primary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.explore__category.active {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.3);
+}
+
+.explore__category:hover:not(.active) {
+  border-color: var(--accent-purple);
+  color: var(--text-primary);
+}
+
+.explore__results-count {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* Grid */
+.explore__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* Empty state */
+.explore__empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-secondary);
+}
+
+.explore__empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .explore__controls {
+    flex-direction: column;
+  }
+  .explore__sort {
+    min-width: auto;
+  }
+}

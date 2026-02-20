@@ -1,0 +1,45 @@
+.mask-text {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 12px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  background: var(--gradient-glow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.mask-text__word-wrapper {
+  overflow: hidden;
+  display: inline-block;
+  position: relative;
+}
+
+.mask-text__word {
+  display: inline-block;
+  will-change: transform;
+}
+
+.mask-text__gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 85, 247, 0.08) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}

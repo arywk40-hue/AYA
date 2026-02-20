@@ -1,0 +1,171 @@
+.auction-timer {
+  text-align: center;
+}
+
+.auction-timer--expired {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-pink);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(236, 72, 153, 0.1);
+  border: 1px solid rgba(236, 72, 153, 0.2);
+}
+
+/* Compact mode (used inside NFTCard) */
+.auction-timer--compact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.auction-timer__label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.auction-timer__compact-time {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+}
+
+/* Full mode (used on NFTDetail page) */
+.auction-timer__heading {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.auction-timer__digits {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+}
+
+.auction-timer__block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.auction-timer__flip {
+  position: relative;
+  width: 72px;
+  height: 84px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glass);
+}
+
+.auction-timer__flip-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.08), rgba(168, 85, 247, 0.02));
+}
+
+.auction-timer__flip-top span {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  transform: translateY(50%);
+}
+
+.auction-timer__flip-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: linear-gradient(0deg, rgba(6, 182, 212, 0.08), rgba(6, 182, 212, 0.02));
+}
+
+.auction-timer__flip-bottom span {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.auction-timer__flip-divider {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  z-index: 2;
+}
+
+.auction-timer__flip-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.1),
+    inset 0 0 40px rgba(6, 182, 212, 0.05);
+  pointer-events: none;
+}
+
+.auction-timer__block-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 8px;
+}
+
+.auction-timer__separator {
+  position: absolute;
+  right: -10px;
+  top: 30px;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-purple);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .auction-timer__flip {
+    width: 56px;
+    height: 66px;
+  }
+  .auction-timer__flip-top span,
+  .auction-timer__flip-bottom span {
+    font-size: 1.5rem;
+  }
+}

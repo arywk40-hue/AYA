@@ -1,0 +1,334 @@
+.create {
+  padding: 40px 0 80px;
+}
+
+.create__header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.create__title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 12px;
+  justify-content: center;
+}
+
+.create__subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+}
+
+.create__layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: start;
+}
+
+/* ============ UPLOAD / DROPZONE ============ */
+.create__upload-section {
+  position: sticky;
+  top: 100px;
+}
+
+.create__dropzone {
+  position: relative;
+  border-radius: var(--radius-xl);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  border: 2px dashed rgba(168, 85, 247, 0.3);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.create__dropzone:hover,
+.create__dropzone.dragging {
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.15);
+}
+
+.create__dropzone.dragging {
+  background: rgba(168, 85, 247, 0.05);
+}
+
+.create__dropzone.has-preview {
+  border-style: solid;
+  border-color: var(--border-glass);
+}
+
+.create__dropzone-content {
+  text-align: center;
+  padding: 40px;
+}
+
+.create__dropzone-icon {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.create__dropzone-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.create__dropzone-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.create__dropzone-btn {
+  padding: 10px 28px;
+  border: 1px solid var(--accent-purple);
+  border-radius: var(--radius-xl);
+  background: transparent;
+  color: var(--accent-purple);
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.create__dropzone-btn:hover {
+  background: var(--accent-purple);
+  color: #fff;
+}
+
+.create__preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.create__preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.create__dropzone:hover .create__preview-overlay {
+  opacity: 1;
+}
+
+/* ============ FORM FIELDS ============ */
+.create__field {
+  margin-bottom: 22px;
+}
+
+.create__field--half {
+  flex: 1;
+}
+
+.create__row {
+  display: flex;
+  gap: 16px;
+}
+
+.create__label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.create__input,
+.create__textarea,
+.create__select {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  font-size: 0.95rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  border: 1px solid transparent;
+}
+
+.create__input:focus,
+.create__textarea:focus,
+.create__select:focus {
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
+}
+
+.create__input::placeholder,
+.create__textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.create__textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.create__select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b8b9e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+.create__select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Toggle group */
+.create__toggle-group {
+  display: flex;
+  gap: 12px;
+}
+
+.create__toggle {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.create__toggle.active {
+  background: rgba(168, 85, 247, 0.1);
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
+}
+
+.create__toggle:hover:not(.active) {
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.create__toggle-icon {
+  font-size: 1.2rem;
+}
+
+/* Summary */
+.create__summary {
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.create__summary-title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+
+.create__summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.create__summary-row:last-child {
+  border-bottom: none;
+}
+
+.create__summary-row span:first-child {
+  color: var(--text-secondary);
+}
+
+.create__summary-row span:last-child {
+  font-weight: 600;
+}
+
+/* Submit */
+.create__submit {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius-xl);
+  background: var(--gradient-primary);
+  color: #fff;
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: box-shadow 0.3s;
+}
+
+.create__submit:hover:not(:disabled) {
+  box-shadow: 0 12px 40px rgba(168, 85, 247, 0.4);
+}
+
+.create__submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.create__submit-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.create__spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .create__layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .create__upload-section {
+    position: static;
+  }
+  .create__dropzone {
+    aspect-ratio: 4/3;
+  }
+  .create__row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

@@ -1,0 +1,130 @@
+/* ==========================================
+   GLOBAL STYLES — AURAVERSE NFT MARKETPLACE
+   ========================================== */
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --border-glass: rgba(255, 255, 255, 0.08);
+
+  --text-primary: #ffffff;
+  --text-secondary: #8b8b9e;
+  --text-muted: #55556a;
+
+  --accent-purple: #a855f7;
+  --accent-cyan: #06b6d4;
+  --accent-pink: #ec4899;
+  --accent-green: #22c55e;
+
+  --gradient-primary: linear-gradient(135deg, #a855f7, #06b6d4);
+  --gradient-secondary: linear-gradient(135deg, #ec4899, #a855f7);
+  --gradient-glow: linear-gradient(135deg, #a855f7 0%, #06b6d4 50%, #ec4899 100%);
+
+  --font-primary: "Space Grotesk", sans-serif;
+  --font-display: "Orbitron", sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-primary);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.app {
+  position: relative;
+  min-height: 100vh;
+}
+
+.main-content {
+  position: relative;
+  z-index: 1;
+  padding-top: 80px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-purple);
+  border-radius: 3px;
+}
+
+/* Selection */
+::selection {
+  background: rgba(168, 85, 247, 0.3);
+  color: #fff;
+}
+
+/* Utility classes */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glassmorphism base */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+}
+
+/* Glow effect */
+.glow-purple {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3),
+    0 0 60px rgba(168, 85, 247, 0.1);
+}
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3),
+    0 0 60px rgba(6, 182, 212, 0.1);
+}
+
+/* Shimmer loading skeleton */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
