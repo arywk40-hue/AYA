@@ -1,22 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import MaskText from "../components/MaskText";
 import NFTCard from "../components/NFTCard";
 import { useWeb3 } from "../context/Web3Context";
-import { DEMO_NFTS } from "../utils/constants";
+import { useContracts } from "../hooks/useContracts";
 import { formatAddress } from "../utils/helpers";
 import "./Profile.css";
 
 const Profile = () => {
   const { account, connectWallet, shortenAddress } = useWeb3();
+  const { fetchAllNFTs, fetchListings } = useContracts();
   const [activeTab, setActiveTab] = useState("owned");
+  const [allNFTs, setAllNFTs] = useState([]);
+  const [listings, setListings] = useState([]);
+  const [loadingNFTs, setLoadingNFTs] = useState(false);
+
+  useEffect(() => {
+    if (!account) return;
+    const load = async () => {
+      setLoadingNFTs(true);
+      const [nfts, ls] = await Promise.all([fetchAllNFTs(), fetchListings()]);
+      const mapped = nfts.map((nft) => ({
+        ...nft,
+        id: nft.tokenId,
+        price: null,
+        likes: 0,
+        isAuction: false,
+      }));
+      setAllNFTs(mapped);
+      setListings(ls);
+      setLoadingNFTs(false);
+    };
+    load();
+  }, [account]);
+
+  const ownedNFTs = allNFTs.filter((n) => n.owner?.toLowerCase() === account?.toLowerCase());
+  const createdNFTs = allNFTs.filter((n) => n.creator?.toLowerCase() === account?.toLowerCase());
+  const listedNFTs = listings
+    .filter((l) => l.seller?.toLowerCase() === account?.toLowerCase() && l.isActive)
+    .map((l) => allNFTs.find((n) => n.id === Number(l.tokenId)))
+    .filter(Boolean);
 
   const tabs = [
-    { id: "owned", label: "Owned", count: 4 },
-    { id: "created", label: "Created", count: 2 },
-    { id: "listed", label: "Listed", count: 3 },
-    { id: "bids", label: "Active Bids", count: 1 },
-    { id: "favorites", label: "Favorites", count: 6 },
+    { id: "owned", label: "Owned", count: ownedNFTs.length },
+    { id: "created", label: "Created", count: createdNFTs.length },
+    { id: "listed", label: "Listed", count: listedNFTs.length },
   ];
 
   if (!account) {
@@ -85,20 +113,16 @@ const Profile = () => {
 
           <div className="profile__stats">
             <div className="profile__stat">
-              <span className="profile__stat-value gradient-text">12</span>
+              <span className="profile__stat-value gradient-text">{ownedNFTs.length}</span>
               <span className="profile__stat-label">Owned</span>
             </div>
             <div className="profile__stat">
-              <span className="profile__stat-value gradient-text">5</span>
+              <span className="profile__stat-value gradient-text">{createdNFTs.length}</span>
               <span className="profile__stat-label">Created</span>
             </div>
             <div className="profile__stat">
-              <span className="profile__stat-value gradient-text">3.2</span>
-              <span className="profile__stat-label">ETH Spent</span>
-            </div>
-            <div className="profile__stat">
-              <span className="profile__stat-value gradient-text">8.7</span>
-              <span className="profile__stat-label">ETH Earned</span>
+              <span className="profile__stat-value gradient-text">{listedNFTs.length}</span>
+              <span className="profile__stat-label">Listed</span>
             </div>
           </div>
         </motion.div>
@@ -125,67 +149,26 @@ const Profile = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          {activeTab === "owned" && (
-            <div className="profile__grid">
-              {DEMO_NFTS.slice(0, 4).map((nft, i) => (
-                <NFTCard key={nft.id} nft={nft} index={i} />
-              ))}
-            </div>
-          )}
-
-          {activeTab === "created" && (
-            <div className="profile__grid">
-              {DEMO_NFTS.slice(0, 2).map((nft, i) => (
-                <NFTCard key={nft.id} nft={nft} index={i} />
-              ))}
-            </div>
-          )}
-
-          {activeTab === "listed" && (
-            <div className="profile__grid">
-              {DEMO_NFTS.slice(1, 4).map((nft, i) => (
-                <NFTCard key={nft.id} nft={nft} index={i} />
-              ))}
-            </div>
-          )}
-
-          {activeTab === "bids" && (
-            <div className="profile__bids-list">
-              {DEMO_NFTS.filter((n) => n.isAuction).map((nft, i) => (
-                <motion.div
-                  key={nft.id}
-                  className="profile__bid-item glass"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <img src={nft.image} alt={nft.name} className="profile__bid-image" />
-                  <div className="profile__bid-info">
-                    <h4 className="profile__bid-name">{nft.name}</h4>
-                    <p className="profile__bid-collection">{nft.collection}</p>
-                  </div>
-                  <div className="profile__bid-details">
-                    <span className="profile__bid-label">Your Bid</span>
-                    <span className="profile__bid-amount gradient-text">
-                      Ξ {nft.highestBid}
-                    </span>
-                  </div>
-                  <div className="profile__bid-status">
-                    <span className="profile__bid-status-badge profile__bid-status-badge--leading">
-                      Leading
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-
-          {activeTab === "favorites" && (
-            <div className="profile__grid">
-              {DEMO_NFTS.map((nft, i) => (
-                <NFTCard key={nft.id} nft={nft} index={i} />
-              ))}
-            </div>
+          {loadingNFTs ? (
+            <p style={{ color: "var(--text-secondary)" }}>Loading your NFTs...</p>
+          ) : (
+            <>
+              {activeTab === "owned" && (
+                <div className="profile__grid">
+                  {ownedNFTs.length > 0 ? ownedNFTs.map((nft, i) => <NFTCard key={nft.id} nft={nft} index={i} />) : <p style={{ color: "var(--text-secondary)" }}>No NFTs owned yet.</p>}
+                </div>
+              )}
+              {activeTab === "created" && (
+                <div className="profile__grid">
+                  {createdNFTs.length > 0 ? createdNFTs.map((nft, i) => <NFTCard key={nft.id} nft={nft} index={i} />) : <p style={{ color: "var(--text-secondary)" }}>No NFTs created yet.</p>}
+                </div>
+              )}
+              {activeTab === "listed" && (
+                <div className="profile__grid">
+                  {listedNFTs.length > 0 ? listedNFTs.map((nft, i) => <NFTCard key={nft.id} nft={nft} index={i} />) : <p style={{ color: "var(--text-secondary)" }}>No active listings.</p>}
+                </div>
+              )}
+            </>
           )}
         </motion.div>
       </div>

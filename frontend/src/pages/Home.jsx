@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import MaskText from "../components/MaskText";
 import NFTCard from "../components/NFTCard";
-import { DEMO_NFTS } from "../utils/constants";
+import { useContracts } from "../hooks/useContracts";
+import { ipfsToHTTP } from "../utils/helpers";
 import "./Home.css";
 
 const stats = [
@@ -15,6 +16,9 @@ const stats = [
 
 const Home = () => {
   const heroRef = useRef(null);
+  const [nfts, setNfts] = useState([]);
+  const [auctionNFTs, setAuctionNFTs] = useState([]);
+  const { fetchAllNFTs, fetchAuctions, getNFTContract } = useContracts();
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -22,6 +26,58 @@ const Home = () => {
 
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  useEffect(() => {
+    // Fetch minted NFTs
+    fetchAllNFTs().then((items) => {
+      setNfts(
+        items.map((nft) => ({
+          ...nft,
+          id: nft.tokenId,
+          price: "—",
+          likes: 0,
+          isAuction: false,
+        }))
+      );
+    });
+    // Fetch live auctions
+    fetchAuctions().then(async (auctions) => {
+      const mapped = await Promise.all(
+        auctions.map(async (a) => {
+          let name = `NFT #${Number(a.tokenId)}`;
+          let image = `https://picsum.photos/seed/nft${Number(a.tokenId)}/500/500`;
+          try {
+            const { ethers } = await import("ethers");
+            const p = window.ethereum ? new ethers.BrowserProvider(window.ethereum) : null;
+            if (p) {
+              const nftC = getNFTContract(p);
+              const uri = await nftC.tokenURI(a.tokenId);
+              const metaURL = ipfsToHTTP(uri);
+              const res = await fetch(metaURL);
+              const meta = await res.json();
+              name = meta.name || name;
+              image = meta.image ? ipfsToHTTP(meta.image) : image;
+            }
+          } catch {}
+          return {
+            id: Number(a.tokenId),
+            name,
+            image,
+            collection: "AuraVerse",
+            price: parseFloat(a.startPrice.toString()) / 1e18,
+            highestBid: parseFloat(a.highestBid.toString()) / 1e18,
+            endTime: Number(a.endTime) * 1000,
+            auctionId: Number(a.auctionId),
+            isAuction: true,
+            likes: 0,
+            creator: a.seller,
+            owner: a.seller,
+          };
+        })
+      );
+      setAuctionNFTs(mapped);
+    });
+  }, []);
 
   return (
     <div className="home">
@@ -107,11 +163,18 @@ const Home = () => {
           </Link>
         </div>
 
-        <div className="featured__grid">
-          {DEMO_NFTS.slice(0, 4).map((nft, index) => (
-            <NFTCard key={nft.id} nft={nft} index={index} />
-          ))}
-        </div>
+        {nfts.length > 0 ? (
+          <div className="featured__grid">
+            {nfts.slice(0, 4).map((nft, index) => (
+              <NFTCard key={nft.id} nft={nft} index={index} />
+            ))}
+          </div>
+        ) : (
+          <div className="explore__empty">
+            <span className="explore__empty-icon">🎨</span>
+            <p>No NFTs yet. <Link to="/create">Mint the first one!</Link></p>
+          </div>
+        )}
       </section>
 
       {/* ============ LIVE AUCTIONS ============ */}
@@ -121,9 +184,12 @@ const Home = () => {
         </div>
 
         <div className="featured__grid">
-          {DEMO_NFTS.filter((n) => n.isAuction).map((nft, index) => (
+          {auctionNFTs.map((nft, index) => (
             <NFTCard key={nft.id} nft={nft} index={index} />
           ))}
+          {auctionNFTs.length === 0 && (
+            <p style={{ color: "var(--text-secondary)" }}>No live auctions right now.</p>
+          )}
         </div>
       </section>
 

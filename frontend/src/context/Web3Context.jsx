@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
+import { SUPPORTED_CHAIN_ID } from "../utils/constants";
 
 const Web3Context = createContext();
 
@@ -11,6 +12,18 @@ export function Web3Provider({ children }) {
   const [signer, setSigner] = useState(null);
   const [chainId, setChainId] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [isWrongNetwork, setIsWrongNetwork] = useState(false);
+
+  const switchToSepolia = useCallback(async () => {
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: `0x${SUPPORTED_CHAIN_ID.toString(16)}` }],
+      });
+    } catch (err) {
+      console.error("Failed to switch network:", err);
+    }
+  }, []);
 
   const connectWallet = useCallback(async () => {
     if (!window.ethereum) {
@@ -28,6 +41,7 @@ export function Web3Provider({ children }) {
       setSigner(signer);
       setAccount(accounts[0]);
       setChainId(Number(network.chainId));
+      setIsWrongNetwork(Number(network.chainId) !== SUPPORTED_CHAIN_ID);
     } catch (err) {
       console.error("Connection failed:", err);
     } finally {
@@ -65,8 +79,10 @@ export function Web3Provider({ children }) {
         signer,
         chainId,
         isConnecting,
+        isWrongNetwork,
         connectWallet,
         disconnectWallet,
+        switchToSepolia,
         shortenAddress,
       }}
     >

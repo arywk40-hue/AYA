@@ -7,6 +7,14 @@ export const formatEth = (wei) => {
   return parseFloat(wei).toFixed(4);
 };
 
+export const ipfsToHTTP = (uri) => {
+  if (!uri) return "";
+  if (uri.startsWith("ipfs://")) {
+    return uri.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/");
+  }
+  return uri;
+};
+
 export const getTimeRemaining = (endTime) => {
   const total = endTime - Date.now();
   if (total <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, expired: true };

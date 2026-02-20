@@ -1,15 +1,22 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import MaskText from "../components/MaskText";
 import { useWeb3 } from "../context/Web3Context";
+import { useContracts } from "../hooks/useContracts";
+import { uploadFileToIPFS, uploadJSONToIPFS } from "../utils/ipfs";
 import "./CreateNFT.css";
 
 const CreateNFT = () => {
   const { account, connectWallet } = useWeb3();
+  const { mintNFT, listNFT, createAuction } = useContracts();
+  const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
+  const [mintStatus, setMintStatus] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -22,6 +29,7 @@ const CreateNFT = () => {
 
   const handleFileChange = (file) => {
     if (file && file.type.startsWith("image/")) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onload = (e) => setPreview(e.target.result);
       reader.readAsDataURL(file);
@@ -52,19 +60,57 @@ const CreateNFT = () => {
       connectWallet();
       return;
     }
-    if (!preview) {
+    if (!selectedFile) {
       alert("Please upload an image");
       return;
     }
 
     setIsMinting(true);
+    setMintStatus("Uploading image to IPFS...");
     try {
-      // In production, upload to IPFS and call smart contract
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      alert("NFT Minted Successfully! 🎉");
+      // 1. Upload image to IPFS
+      const imageURI = await uploadFileToIPFS(selectedFile);
+
+      // 2. Build & upload metadata JSON
+      setMintStatus("Uploading metadata to IPFS...");
+      const metadata = {
+        name: formData.name,
+        description: formData.description,
+        image: imageURI,
+        collection: formData.collection || "AuraVerse",
+      };
+      const tokenURI = await uploadJSONToIPFS(metadata);
+
+      // 3. Mint NFT on-chain
+      setMintStatus("Minting NFT on-chain...");
+      const mintResult = await mintNFT(tokenURI);
+      if (!mintResult.success) throw new Error(mintResult.error);
+
+      // Extract tokenId from the mint receipt
+      const mintLog = mintResult.receipt.logs.find((l) => l.fragment?.name === "NFTMinted");
+      const tokenId = mintLog ? Number(mintLog.args[0]) : null;
+
+      // 4. List on marketplace or create auction
+      if (tokenId !== null && formData.price) {
+        if (formData.listingType === "auction") {
+          setMintStatus("Creating auction...");
+          const durationSec = parseInt(formData.auctionDuration) * 3600;
+          const auctionResult = await createAuction(tokenId, formData.price, durationSec);
+          if (!auctionResult.success) throw new Error(auctionResult.error);
+        } else {
+          setMintStatus("Listing on marketplace...");
+          const listResult = await listNFT(tokenId, formData.price);
+          if (!listResult.success) throw new Error(listResult.error);
+        }
+      }
+
+      setMintStatus(null);
+      alert("NFT Minted & Listed Successfully! 🎉");
+      navigate("/explore");
     } catch (err) {
       console.error("Minting failed:", err);
-      alert("Minting failed. Please try again.");
+      setMintStatus(null);
+      alert("Minting failed: " + (err.message || "Please try again."));
     } finally {
       setIsMinting(false);
     }
@@ -286,7 +332,7 @@ const CreateNFT = () => {
               {isMinting ? (
                 <span className="create__submit-loading">
                   <span className="create__spinner" />
-                  Minting...
+                  {mintStatus || "Minting..."}
                 </span>
               ) : account ? (
                 <>

@@ -1,81 +1,9 @@
+// Network / contract addresses
 export const NFT_COLLECTION_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 export const MARKETPLACE_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 export const AUCTION_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
 
 export const SUPPORTED_CHAIN_ID = 11155111; // Sepolia
 
-// Demo NFTs for UI showcase
-export const DEMO_NFTS = [
-  {
-    id: 1,
-    name: "Cosmic Dreamer #001",
-    image: "https://picsum.photos/seed/nft1/500/500",
-    price: "0.85",
-    creator: "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
-    owner: "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B",
-    likes: 234,
-    isAuction: false,
-    collection: "Cosmic Series",
-  },
-  {
-    id: 2,
-    name: "Neon Genesis #042",
-    image: "https://picsum.photos/seed/nft2/500/500",
-    price: "2.10",
-    creator: "0x1234567890abcdef1234567890abcdef12345678",
-    owner: "0x1234567890abcdef1234567890abcdef12345678",
-    likes: 891,
-    isAuction: true,
-    endTime: Date.now() + 86400000 * 2,
-    highestBid: "2.10",
-    collection: "Neon Collection",
-  },
-  {
-    id: 3,
-    name: "Digital Bloom #007",
-    image: "https://picsum.photos/seed/nft3/500/500",
-    price: "1.25",
-    creator: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
-    owner: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
-    likes: 567,
-    isAuction: false,
-    collection: "Bloom Series",
-  },
-  {
-    id: 4,
-    name: "Quantum Rift #019",
-    image: "https://picsum.photos/seed/nft4/500/500",
-    price: "5.00",
-    creator: "0x9876543210fedcba9876543210fedcba98765432",
-    owner: "0x9876543210fedcba9876543210fedcba98765432",
-    likes: 1203,
-    isAuction: true,
-    endTime: Date.now() + 86400000,
-    highestBid: "5.00",
-    collection: "Quantum Art",
-  },
-  {
-    id: 5,
-    name: "Ethereal Waves #033",
-    image: "https://picsum.photos/seed/nft5/500/500",
-    price: "0.55",
-    creator: "0x1111222233334444555566667777888899990000",
-    owner: "0x1111222233334444555566667777888899990000",
-    likes: 345,
-    isAuction: false,
-    collection: "Wave Series",
-  },
-  {
-    id: 6,
-    name: "Prism Shard #088",
-    image: "https://picsum.photos/seed/nft6/500/500",
-    price: "3.75",
-    creator: "0xaaaabbbbccccddddeeeeffffaaaabbbbccccdddd",
-    owner: "0xaaaabbbbccccddddeeeeffffaaaabbbbccccdddd",
-    likes: 782,
-    isAuction: true,
-    endTime: Date.now() + 43200000,
-    highestBid: "3.75",
-    collection: "Prism Art",
-  },
-];
+// Demo NFTs removed — keep an empty export so pages importing DEMO_NFTS don't break.
+export const DEMO_NFTS = [];
